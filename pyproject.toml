@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "botfm"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+pyshark = "^0.5.3"
+notebook = "^6.5.4"
+dpkt = "^1.9.8"
+pydantic = "^1.10.7"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

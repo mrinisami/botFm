@@ -1,0 +1,9 @@
+craftResult = input.readByte()
+objectGID = input.readVarUhInt()
+effectsLen = input.readUnsignedShort()
+loop to effectsLen:
+	ObjectEffectId = input.readUnsignedShort()
+	actionId = input.readVarUhShort()
+objectGID = input.readVarUhInt()
+quantity = inputVarUhInt()
+magicPoolStatus = input.readByte()
