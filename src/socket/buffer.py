@@ -27,10 +27,7 @@ class Buffer(BaseModel):
         self.__validate_read_bytes(n * 2)
         start_pos = self.pos
         self.pos += n * 2
-        if not signed:
-            return int.from_bytes(bytes.fromhex(self.data[start_pos:self.pos]), "big", signed=signed)
-        else:
-            return int.from_bytes(bytes.fromhex(self.data[start_pos:self.pos]), "big", signed=signed)
+        return int.from_bytes(bytes.fromhex(self.data[start_pos:self.pos]), "big", signed=signed)
 
     def read_n_bytes_buffer(self, n: int) -> Buffer:
         self.__validate_read_bytes(n * 2)
@@ -39,34 +36,20 @@ class Buffer(BaseModel):
         return Buffer.from_str(self.data[start_pos: self.pos])
 
     def read_var_int(self) -> int:
-        offset = 0
-        value = 0
-        while offset < self.int_size:
+        ans = 0
+        for i in range(0, 32, 7):
             b = self.read_n_bytes(1, False)
-            has_next = b & self.mask_128 == self.mask_128
-            if offset > 0:
-                value += b & self.mask_127 << offset
-            else:
-                value += b & self.mask_127
-            offset += self.chunk_bit_size
-            if not has_next:
-                return value
+            ans += (b & 0b01111111) << i
+            if not b & 0b10000000:
+                return ans
 
     def read_var_short(self) -> int:
-        offset = 0
-        value = 0
-        while offset < self.short_size:
-            b = self.read_n_bytes(1, False)
-            has_next = b & self.mask_128 == self.mask_128
-            if offset > 0:
-                value += b & self.mask_127 << offset
-            else:
-                value += b & self.mask_127
-            offset += self.chunk_bit_size
-            if not has_next:
-                if value > self.short_max_value:
-                    value -= self.unsigned_short_max_value
-                return value
+        ans = 0
+        for i in range(0, 16, 7):
+            b = self.read_n_bytes(1, True)
+            ans += (b & 0b01111111) << i
+            if not b & 0b10000000:
+                return ans
 
     def has_data_left(self) -> bool:
         return len(self.data) > self.pos

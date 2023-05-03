@@ -11,6 +11,7 @@ class FmResults(BaseModel):
 
     craft_result: int
     object_gid: int
+    object_uid: int
     effects_len: int
     object_effect: List[ObjectEffect]
     quantity: int

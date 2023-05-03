@@ -1,2 +1,0 @@
-LaBot
-Untitled.ipynb
